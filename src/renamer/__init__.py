@@ -35,16 +35,45 @@ def fileList(path):
         errorNotify(sys.exc_info()[2], e)
 
 
-def doRename():
+def nString(cn, width=4):
+    try:
+        return f"{cn:>0{width}}"
+    except Exception as e:
+        errorRaise(sys.exc_info()[2], e)
+
+
+def nextNumber(path, fn, start=0, width=4):
+    try:
+        ifn = os.path.join(path, fn)
+        bfn, ext = os.path.splitext(fn)
+        if ext == ".part":
+            return None
+        cn = start
+        while True:
+            sfn = f"{nString(cn)}{ext}"
+            ofn = os.path.join(path, sfn)
+            if os.path.isfile(ofn):
+                cn += 1
+                continue
+            else:
+                break
+        return cn, sfn
+    except Exception as e:
+        errorRaise(sys.exc_info()[2], e)
+
+
+def doRename(width=4, start=0):
     try:
         path = "/home/chris/dwhelper" if len(sys.argv) == 1 else sys.argv[1]
+        if not os.path.isdir(path):
+            print(f"{path} is not a directory")
+            sys.exit(1)
         fns = fileList(path=path)
-        for cn, fn in enumerate(fns):
-            ifn = os.path.join("/home/chris/dwhelper", fn)
-            bfn, ext = os.path.splitext(fn)
-            if ext == ".part":
+        for fn in fns:
+            cn, ofn = nextNumber(path, fn, start=start, width=width)
+            if cn is None:
                 continue
-            ofn = os.path.join("/home/chris/dwhelper", f"{cn}{ext}")
+            ifn = os.path.join(path, fn)
             print(f"renaming: {ifn} to {ofn}")
             os.rename(ifn, ofn)
     except Exception as e:

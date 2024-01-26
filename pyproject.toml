@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "renamer"
-version = "0.1.1"
+version = "0.1.2"
 description = ""
 authors = ["ccdale <chris.allison@hivehome.com>"]
 readme = "README.md"
@@ -11,7 +11,7 @@ python = "^3.10"
 ccalogging = "^0.4.4"
 
 [tool.poetry.scripts]
-renamer = "renamer:doRename"
+renumber = "renamer:doRename"
 
 [build-system]
 requires = ["poetry-core"]
