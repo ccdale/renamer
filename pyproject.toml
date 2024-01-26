@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "renamer"
-version = "0.1.2"
+version = "0.1.3"
 description = ""
 authors = ["ccdale <chris.allison@hivehome.com>"]
 readme = "README.md"
@@ -9,9 +9,10 @@ packages = [{include = "renamer", from = "src"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 ccalogging = "^0.4.4"
+ccaerrors = "^0.1.2"
 
 [tool.poetry.scripts]
-renumber = "renamer:doRename"
+numd = "renamer:doRename"
 
 [build-system]
 requires = ["poetry-core"]
