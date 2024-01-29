@@ -1,7 +1,7 @@
 import os
 import sys
 
-import ccaerrors
+from ccaerrors import errorExit, errorNotify, errorRaise
 import ccalogging
 
 import renamer
@@ -64,14 +64,14 @@ def doRename(width=4, start=0):
             tcn += 1
         log.info(f"renamed {tcn} files")
     except Exception as e:
-        errorNotify(sys.exc_info()[2], e)
+        errorRaise(sys.exc_info()[2], e)
 
 
 def main():
     try:
         doRename(width=4, start=0)
     except Exception as e:
-        errorRaise(sys.exc_info()[2], e)
+        errorExit(sys.exc_info()[2], e)
 
 
 if __name__ == "__main__":
