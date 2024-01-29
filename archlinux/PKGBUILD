@@ -1,6 +1,6 @@
-# Maintainer: Chris Allison <chris.charles.allison+ccaerrors@gmail.com>
-_pkgname=ccaerrors-git
-pkgname=python-ccaerrors
+# Maintainer: Chris Allison <chris.charles.allison+ccarenamer@gmail.com>
+_pkgname=ccarenamer-git
+pkgname=python-ccarenamer
 pkgver=0.1.4
 pkgrel=1
 pkgdesc="A simple exception handling library for python"

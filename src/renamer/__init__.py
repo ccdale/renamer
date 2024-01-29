@@ -2,7 +2,7 @@ import sys
 
 import ccalogging
 
-__version__ = "0.1.6"
+__version__ = "0.1.7"
 __appname__ = "numd"
 
 ccalogging.setConsoleOut()

@@ -1,0 +1,11 @@
+__pycache__/
+*swp
+build/
+.pytest_cache/
+tags
+dist/
+*.egg-info/
+archlinux/src
+archlinux/pkg
+archlinux/ccalogging
+archlinux/*tar.zst
