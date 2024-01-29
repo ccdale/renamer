@@ -10,7 +10,7 @@ license=('GPL')
 makedepends=('git' 'python-build' 'python-installer' 'python-poetry-core')
 provides=("${_pkgname%-git}")
 conflicts=("${_pkgname%-git}")
-source=("git+file:///${HOME}/src/${_pkgname%-git}#branch=main")
+source=("git+file:///${HOME}/src/${_pkgname%-git}#branch=master")
 md5sums=('SKIP')
 
 
