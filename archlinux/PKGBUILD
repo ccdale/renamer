@@ -1,0 +1,30 @@
+# Maintainer: Chris Allison <chris.charles.allison+ccaerrors@gmail.com>
+_pkgname=ccaerrors-git
+pkgname=python-ccaerrors
+pkgver=0.1.4
+pkgrel=1
+pkgdesc="A simple exception handling library for python"
+arch=('any')
+url="https://github.com/ccdale/${_pkgname%-git}"
+license=('GPL')
+makedepends=('git' 'python-build' 'python-installer' 'python-poetry-core')
+provides=("${_pkgname%-git}")
+conflicts=("${_pkgname%-git}")
+source=("git+file:///${HOME}/src/${_pkgname%-git}#branch=main")
+md5sums=('SKIP')
+
+
+pkgver() {
+    read xname xversion < <(poetry version)
+    printf "%s" "${xversion}"
+}
+
+build() {
+	cd "$srcdir/${_pkgname%-git}"
+    python -m build --wheel --no-isolation
+}
+
+package() {
+	cd "$srcdir/${_pkgname%-git}"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+}
