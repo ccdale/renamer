@@ -75,4 +75,8 @@ def main():
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "-h" or sys.argv[1] == "--help":
+            print(f"\nusage: {sys.argv[0]} [path]\n")
+            sys.exit(0)
     main()
