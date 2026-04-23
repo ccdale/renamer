@@ -5,7 +5,7 @@ Renames all files in a directory with an increasing number.
 ## usage
 
 ```
-# on it's own defaults to $HOME/dwhelper/
+# with no path, operate on the current directory in dry-run mode
 numd
 ```
 

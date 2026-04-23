@@ -40,7 +40,7 @@ def nextNumber(path, fn, start=0, width=4, prefix=""):
 
 
 def doRename(
-    path="~/dwhelper",
+    path=".",
     width=4,
     start=0,
     prefix="",
@@ -84,7 +84,7 @@ def parseArgs(argv=None):
         prog="numd",
         description="Rename files in a directory with incrementing numeric filenames.",
     )
-    parser.add_argument("path", nargs="?", default="~/dwhelper")
+    parser.add_argument("path", nargs="?", default=None)
     parser.add_argument("-D", "--dry-run", action="store_true")
     parser.add_argument("-w", "--width", type=int, default=4)
     parser.add_argument("-s", "--start", type=int, default=0)
@@ -96,12 +96,14 @@ def parseArgs(argv=None):
 def main():
     try:
         args = parseArgs()
+        path = "." if args.path is None else args.path
+        dry_run = args.dry_run or args.path is None
         doRename(
-            path=args.path,
+            path=path,
             width=args.width,
             start=args.start,
             prefix=args.prefix,
-            dry_run=args.dry_run,
+            dry_run=dry_run,
             randomise=args.randomise,
         )
     except Exception as e:

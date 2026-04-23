@@ -106,12 +106,27 @@ def test_parse_args_defaults(monkeypatch):
 
     args = numd.parseArgs()
 
-    assert args.path == "~/dwhelper"
+    assert args.path is None
     assert args.dry_run is False
     assert args.width == 4
     assert args.start == 0
     assert args.prefix == ""
     assert args.randomise is False
+
+
+def test_main_defaults_to_current_dir_and_dry_run(monkeypatch):
+    monkeypatch.setattr(sys, "argv", ["numd"])
+    called = {}
+
+    def fake_do_rename(**kwargs):
+        called.update(kwargs)
+
+    monkeypatch.setattr(numd, "doRename", fake_do_rename)
+
+    numd.main()
+
+    assert called["path"] == "."
+    assert called["dry_run"] is True
 
 
 def test_parse_args_with_all_options(monkeypatch):
