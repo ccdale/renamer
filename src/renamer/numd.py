@@ -55,9 +55,10 @@ def doRename(width=4, start=0):
         fns = fileList(path=path)
         tcn = 0
         for fn in fns:
-            cn, ofn = nextNumber(path, fn, start=start, width=width)
-            if cn is None:
+            result = nextNumber(path, fn, start=start, width=width)
+            if result is None:
                 continue
+            cn, ofn = result
             start = cn + 1
             ifn = os.path.join(path, fn)
             log.info(f"renaming: {ifn} to {ofn}")
