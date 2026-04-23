@@ -164,3 +164,14 @@ def test_parse_args_invalid_start_exits(monkeypatch):
         numd.parseArgs()
 
     assert ex.value.code == 2
+
+
+def test_parse_args_version_exits_with_output(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["numd", "--version"])
+
+    with pytest.raises(SystemExit) as ex:
+        numd.parseArgs()
+
+    out = capsys.readouterr().out.strip()
+    assert ex.value.code == 0
+    assert out == f"numd {numd.__version__}"

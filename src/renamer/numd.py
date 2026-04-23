@@ -3,7 +3,7 @@ import os
 import random
 import sys
 
-from renamer import errorExit, errorNotify, errorRaise, log
+from renamer import __version__, errorExit, errorNotify, errorRaise, log
 
 
 def fileList(path):
@@ -90,6 +90,9 @@ def parseArgs(argv=None):
     parser.add_argument("-s", "--start", type=int, default=0)
     parser.add_argument("-p", "--prefix", default="")
     parser.add_argument("-r", "--randomise", action="store_true")
+    parser.add_argument(
+        "-v", "--version", action="version", version=f"%(prog)s {__version__}"
+    )
     return parser.parse_args(argv)
 
 
