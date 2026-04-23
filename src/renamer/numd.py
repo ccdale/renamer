@@ -1,5 +1,6 @@
 import argparse
 import os
+import random
 import sys
 
 from renamer import errorExit, errorNotify, errorRaise, log
@@ -38,13 +39,22 @@ def nextNumber(path, fn, start=0, width=4, prefix=""):
         errorRaise(sys.exc_info()[2], e)
 
 
-def doRename(path="~/dwhelper", width=4, start=0, prefix="", dry_run=False):
+def doRename(
+    path="~/dwhelper",
+    width=4,
+    start=0,
+    prefix="",
+    dry_run=False,
+    randomise=False,
+):
     try:
         path = os.path.expanduser(path)
         if not os.path.isdir(path):
             log.error(f"{path} is not a directory")
             sys.exit(1)
         fns = fileList(path=path)
+        if randomise:
+            random.shuffle(fns)
         if fns:
             max_index = start + len(fns) - 1
             required_width = len(str(max_index))
@@ -79,6 +89,7 @@ def parseArgs(argv=None):
     parser.add_argument("-w", "--width", type=int, default=4)
     parser.add_argument("-s", "--start", type=int, default=0)
     parser.add_argument("-p", "--prefix", default="")
+    parser.add_argument("-r", "--randomise", action="store_true")
     return parser.parse_args(argv)
 
 
@@ -91,6 +102,7 @@ def main():
             start=args.start,
             prefix=args.prefix,
             dry_run=args.dry_run,
+            randomise=args.randomise,
         )
     except Exception as e:
         errorExit(sys.exc_info()[2], e)

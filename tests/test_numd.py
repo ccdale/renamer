@@ -84,6 +84,23 @@ def test_do_rename_non_directory_exits():
     assert ex.value.code == 1
 
 
+def test_do_rename_randomise_calls_shuffle(tmp_path, monkeypatch):
+    (tmp_path / "a.mp4").write_text("a")
+    (tmp_path / "b.mp4").write_text("b")
+
+    called = {"value": False}
+
+    def fake_shuffle(items):
+        called["value"] = True
+        items.reverse()
+
+    monkeypatch.setattr(numd.random, "shuffle", fake_shuffle)
+
+    numd.doRename(path=str(tmp_path), width=4, start=0, randomise=True)
+
+    assert called["value"] is True
+
+
 def test_parse_args_defaults(monkeypatch):
     monkeypatch.setattr(sys, "argv", ["numd"])
 
@@ -94,6 +111,7 @@ def test_parse_args_defaults(monkeypatch):
     assert args.width == 4
     assert args.start == 0
     assert args.prefix == ""
+    assert args.randomise is False
 
 
 def test_parse_args_with_all_options(monkeypatch):
@@ -110,6 +128,7 @@ def test_parse_args_with_all_options(monkeypatch):
             "100",
             "-p",
             "clip_",
+            "-r",
         ],
     )
 
@@ -120,6 +139,7 @@ def test_parse_args_with_all_options(monkeypatch):
     assert args.width == 6
     assert args.start == 100
     assert args.prefix == "clip_"
+    assert args.randomise is True
 
 
 def test_parse_args_invalid_start_exits(monkeypatch):

@@ -29,3 +29,8 @@ numd ~/example --dry-run
 # choose width and add a prefix
 numd ~/example --width 6 --prefix clip_
 ```
+
+```
+# randomise processing order before renaming
+numd ~/example --randomise
+```
