@@ -14,3 +14,8 @@ numd
 # the extension intact.
 numd ~/example
 ```
+
+```
+# same as above, but start numbering at 100.
+numd ~/example 100
+```

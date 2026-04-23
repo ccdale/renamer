@@ -1,12 +1,7 @@
 import os
 import sys
 
-from ccaerrors import errorExit, errorNotify, errorRaise
-import ccalogging
-
-import renamer
-
-log = renamer.log
+from renamer import errorExit, errorNotify, errorRaise, log
 
 
 def fileList(path):
@@ -25,7 +20,7 @@ def nString(cn, width=4):
 
 def nextNumber(path, fn, start=0, width=4):
     try:
-        ifn = os.path.join(path, fn)
+        # ifn = os.path.join(path, fn)
         bfn, ext = os.path.splitext(fn)
         if ext == ".part":
             return None
@@ -47,6 +42,12 @@ def doRename(width=4, start=0):
     try:
         path = "~/dwhelper"
         path = path if len(sys.argv) == 1 else sys.argv[1]
+        if len(sys.argv) > 2:
+            try:
+                start = int(sys.argv[2])
+            except ValueError:
+                log.error(f"start value '{sys.argv[2]}' is not a valid integer")
+                sys.exit(1)
         path = os.path.expanduser(path)
         if not os.path.isdir(path):
             log.error(f"{path} is not a directory")
@@ -75,8 +76,10 @@ def main():
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        if sys.argv[1] == "-h" or sys.argv[1] == "--help":
-            print(f"\nusage: {sys.argv[0]} [path]\n")
-            sys.exit(0)
+    if any(arg in ("-h", "--help") for arg in sys.argv[1:]):
+        print(f"\nusage: {sys.argv[0]} [path] [start]\n")
+        sys.exit(0)
+    if len(sys.argv) > 3:
+        log.error(f"usage: {sys.argv[0]} [path] [start]")
+        sys.exit(1)
     main()

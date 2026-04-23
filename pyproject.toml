@@ -15,7 +15,6 @@ classifiers = [
 ]
 dependencies = [
     "ccalogging>=0.4.4,<0.5",
-    "ccaerrors>=0.1.2,<0.2",
 ]
 
 [project.scripts]
