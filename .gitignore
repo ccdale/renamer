@@ -9,3 +9,4 @@ archlinux/src
 archlinux/pkg
 archlinux/ccalogging
 archlinux/*tar.zst
+.vscode/
