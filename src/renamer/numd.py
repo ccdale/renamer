@@ -45,6 +45,11 @@ def doRename(path="~/dwhelper", width=4, start=0, prefix="", dry_run=False):
             log.error(f"{path} is not a directory")
             sys.exit(1)
         fns = fileList(path=path)
+        if fns:
+            max_index = start + len(fns) - 1
+            required_width = len(str(max_index))
+            if required_width > width:
+                width = required_width
         tcn = 0
         for fn in fns:
             result = nextNumber(path, fn, start=start, width=width, prefix=prefix)

@@ -1,7 +1,7 @@
 # Maintainer: Chris Allison <chris.charles.allison+renamer@gmail.com>
 _pkgname=renamer-git
 pkgname=python-renamer
-pkgver=0.2.0
+pkgver=0.2.1
 pkgrel=1
 pkgdesc="A simple exception handling library for python"
 arch=('any')

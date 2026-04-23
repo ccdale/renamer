@@ -66,6 +66,17 @@ def test_do_rename_dry_run_makes_no_changes(tmp_path):
     assert names == {"one.mp4", "two.mp4"}
 
 
+def test_do_rename_auto_expands_width_from_file_count(tmp_path):
+    for i in range(12):
+        (tmp_path / f"clip{i}.mp4").write_text("x")
+
+    numd.doRename(path=str(tmp_path), width=1, start=0)
+
+    names = sorted(p.name for p in tmp_path.iterdir())
+    assert names[0] == "00.mp4"
+    assert names[-1] == "11.mp4"
+
+
 def test_do_rename_non_directory_exits():
     with pytest.raises(SystemExit) as ex:
         numd.doRename(path="/definitely/not/a/real/dir")
