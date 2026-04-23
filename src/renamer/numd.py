@@ -1,3 +1,4 @@
+import argparse
 import os
 import sys
 
@@ -18,15 +19,14 @@ def nString(cn, width=4):
         errorRaise(sys.exc_info()[2], e)
 
 
-def nextNumber(path, fn, start=0, width=4):
+def nextNumber(path, fn, start=0, width=4, prefix=""):
     try:
-        # ifn = os.path.join(path, fn)
-        bfn, ext = os.path.splitext(fn)
+        _, ext = os.path.splitext(fn)
         if ext == ".part":
             return None
         cn = start
         while True:
-            sfn = f"{nString(cn)}{ext}"
+            sfn = f"{prefix}{nString(cn, width=width)}{ext}"
             ofn = os.path.join(path, sfn)
             if os.path.exists(ofn):
                 cn += 1
@@ -38,16 +38,8 @@ def nextNumber(path, fn, start=0, width=4):
         errorRaise(sys.exc_info()[2], e)
 
 
-def doRename(width=4, start=0):
+def doRename(path="~/dwhelper", width=4, start=0, prefix="", dry_run=False):
     try:
-        path = "~/dwhelper"
-        path = path if len(sys.argv) == 1 else sys.argv[1]
-        if len(sys.argv) > 2:
-            try:
-                start = int(sys.argv[2])
-            except ValueError:
-                log.error(f"start value '{sys.argv[2]}' is not a valid integer")
-                sys.exit(1)
         path = os.path.expanduser(path)
         if not os.path.isdir(path):
             log.error(f"{path} is not a directory")
@@ -55,32 +47,49 @@ def doRename(width=4, start=0):
         fns = fileList(path=path)
         tcn = 0
         for fn in fns:
-            result = nextNumber(path, fn, start=start, width=width)
+            result = nextNumber(path, fn, start=start, width=width, prefix=prefix)
             if result is None:
                 continue
             cn, ofn = result
             start = cn + 1
             ifn = os.path.join(path, fn)
-            log.info(f"renaming: {ifn} to {ofn}")
-            os.rename(ifn, ofn)
+            action = "would rename" if dry_run else "renaming"
+            log.info(f"{action}: {ifn} to {ofn}")
+            if not dry_run:
+                os.rename(ifn, ofn)
             tcn += 1
-        log.info(f"renamed {tcn} files")
+        summary = "would rename" if dry_run else "renamed"
+        log.info(f"{summary} {tcn} files")
     except Exception as e:
         errorRaise(sys.exc_info()[2], e)
 
 
+def parseArgs(argv=None):
+    parser = argparse.ArgumentParser(
+        prog="numd",
+        description="Rename files in a directory with incrementing numeric filenames.",
+    )
+    parser.add_argument("path", nargs="?", default="~/dwhelper")
+    parser.add_argument("-D", "--dry-run", action="store_true")
+    parser.add_argument("-w", "--width", type=int, default=4)
+    parser.add_argument("-s", "--start", type=int, default=0)
+    parser.add_argument("-p", "--prefix", default="")
+    return parser.parse_args(argv)
+
+
 def main():
     try:
-        doRename(width=4, start=0)
+        args = parseArgs()
+        doRename(
+            path=args.path,
+            width=args.width,
+            start=args.start,
+            prefix=args.prefix,
+            dry_run=args.dry_run,
+        )
     except Exception as e:
         errorExit(sys.exc_info()[2], e)
 
 
 if __name__ == "__main__":
-    if any(arg in ("-h", "--help") for arg in sys.argv[1:]):
-        print(f"\nusage: {sys.argv[0]} [path] [start]\n")
-        sys.exit(0)
-    if len(sys.argv) > 3:
-        log.error(f"usage: {sys.argv[0]} [path] [start]")
-        sys.exit(1)
     main()

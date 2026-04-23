@@ -36,32 +36,85 @@ def test_next_number_finds_first_available_slot(tmp_path):
     assert out_name == os.path.join(str(tmp_path), "0002.mp4")
 
 
-def test_do_rename_renames_files_and_ignores_part(tmp_path, monkeypatch):
+def test_next_number_applies_prefix(tmp_path):
+    cn, out_name = numd.nextNumber(
+        str(tmp_path), "input.mp4", start=7, width=4, prefix="clip_"
+    )
+
+    assert cn == 7
+    assert out_name == os.path.join(str(tmp_path), "clip_0007.mp4")
+
+
+def test_do_rename_renames_files_and_ignores_part(tmp_path):
     (tmp_path / "one.mp4").write_text("1")
     (tmp_path / "two.mp4").write_text("2")
     (tmp_path / "three.part").write_text("3")
 
-    monkeypatch.setattr(sys, "argv", ["numd", str(tmp_path), "100"])
-
-    numd.doRename(width=4, start=0)
+    numd.doRename(path=str(tmp_path), width=4, start=100)
 
     names = {p.name for p in tmp_path.iterdir()}
     assert names == {"0100.mp4", "0101.mp4", "three.part"}
 
 
-def test_do_rename_invalid_start_exits(tmp_path, monkeypatch):
-    monkeypatch.setattr(sys, "argv", ["numd", str(tmp_path), "not-an-int"])
+def test_do_rename_dry_run_makes_no_changes(tmp_path):
+    (tmp_path / "one.mp4").write_text("1")
+    (tmp_path / "two.mp4").write_text("2")
 
+    numd.doRename(path=str(tmp_path), width=4, start=10, dry_run=True)
+
+    names = {p.name for p in tmp_path.iterdir()}
+    assert names == {"one.mp4", "two.mp4"}
+
+
+def test_do_rename_non_directory_exits():
     with pytest.raises(SystemExit) as ex:
-        numd.doRename(width=4, start=0)
+        numd.doRename(path="/definitely/not/a/real/dir")
 
     assert ex.value.code == 1
 
 
-def test_do_rename_non_directory_exits(monkeypatch):
-    monkeypatch.setattr(sys, "argv", ["numd", "/definitely/not/a/real/dir"])
+def test_parse_args_defaults(monkeypatch):
+    monkeypatch.setattr(sys, "argv", ["numd"])
+
+    args = numd.parseArgs()
+
+    assert args.path == "~/dwhelper"
+    assert args.dry_run is False
+    assert args.width == 4
+    assert args.start == 0
+    assert args.prefix == ""
+
+
+def test_parse_args_with_all_options(monkeypatch):
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "numd",
+            "~/example",
+            "-D",
+            "-w",
+            "6",
+            "-s",
+            "100",
+            "-p",
+            "clip_",
+        ],
+    )
+
+    args = numd.parseArgs()
+
+    assert args.path == "~/example"
+    assert args.dry_run is True
+    assert args.width == 6
+    assert args.start == 100
+    assert args.prefix == "clip_"
+
+
+def test_parse_args_invalid_start_exits(monkeypatch):
+    monkeypatch.setattr(sys, "argv", ["numd", "~/example", "--start", "not-an-int"])
 
     with pytest.raises(SystemExit) as ex:
-        numd.doRename(width=4, start=0)
+        numd.parseArgs()
 
-    assert ex.value.code == 1
+    assert ex.value.code == 2

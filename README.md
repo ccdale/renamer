@@ -17,5 +17,15 @@ numd ~/example
 
 ```
 # same as above, but start numbering at 100.
-numd ~/example 100
+numd ~/example --start 100
+```
+
+```
+# dry-run (report only, no changes made)
+numd ~/example --dry-run
+```
+
+```
+# choose width and add a prefix
+numd ~/example --width 6 --prefix clip_
 ```
